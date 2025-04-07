@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Complaint Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a6bff;
+            --secondary: #ffffff;
+            --text: #333333;
+            --text-secondary: #666666;
+            --card-bg: #f8f9fa;
+            --picker-bg: #f1f3f5;
+            --accent: #ff6b6b;
+            --border: #e0e0e0;
+        }
+
+        body.dark-mode {
+            --primary: #5e7cff;
+            --secondary: #1e1e1e;
+            --text: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --card-bg: #2d2d2d;
+            --picker-bg: #3d3d3d;
+            --accent: #ff8e8e;
+            --border: #444444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 15px;
+            background-color: var(--secondary);
+        }
+
+        .input-icon {
+            margin-right: 10px;
+            color: var(--text-secondary);
+        }
+
+        .input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        textarea.input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .picker-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0 15px;
+            background-color: var(--picker-bg);
+        }
+
+        .picker {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 14px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .file-upload-container {
+            margin-top: 15px;
+        }
+
+        .file-upload-label {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: var(--primary);
+            color: var(--secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .file-upload-label i {
+            margin-right: 8px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-preview {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .file-preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .file-preview-item img, .file-preview-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-file {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .submit-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: var(--secondary);
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: var(--primary);
+            opacity: 0.9;
+        }
+
+        .submit-button i {
+            margin-right: 10px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--secondary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .error-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f44336;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .other-input {
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+
+        <h1>Gym Complaint Form</h1>
+
+        <div id="successMessage" class="success-message">
+            Complaint submitted successfully!
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            Error submitting complaint. Please try again.
+        </div>
+
+        <!-- Member Details Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-user"></i>
+                <h2 class="section-title">Member Details</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Full Name</label>
+                <div class="input-container">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" class="input" id="name" placeholder="Enter your full name" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label class="label">Phone Number</label>
+                    <div class="input-container">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" class="input" id="phone" placeholder="Enter phone number" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Email Address</label>
+                    <div class="input-container">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" class="input" id="email" placeholder="Enter email address" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complaint Details Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-exclamation-circle"></i>
+                <h2 class="section-title">Complaint Details</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Category of Complaint</label>
+                <div class="picker-container">
+                    <i class="fas fa-tag input-icon"></i>
+                    <select class="picker" id="category" required>
+                        <option value="">Select category</option>
+                        <option value="equipment">Equipment Issues</option>
+                        <option value="hygiene">Hygiene & Cleanliness</option>
+                        <option value="staff">Staff Behavior</option>
+                        <option value="membership">Membership & Billing</option>
+                        <option value="facility">Facility Maintenance</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="input-container other-input" id="otherCategoryInput">
+                    <i class="fas fa-pen input-icon"></i>
+                    <input type="text" class="input" id="otherCategory" placeholder="Please specify">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Complaint Description</label>
+                <div class="input-container">
+                    <i class="fas fa-align-left input-icon"></i>
+                    <textarea class="input" id="description" placeholder="Please describe your complaint in detail" required></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Date & Time of Incident</label>
+                <div class="input-container">
+                    <i class="fas fa-calendar-alt input-icon"></i>
+                    <input type="datetime-local" class="input" id="incidentDate">
+                </div>
+            </div>
+        </div>
+
+        <!-- Supporting Evidence Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-paperclip"></i>
+                <h2 class="section-title">Supporting Evidence (Optional)</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Upload Images/Videos</label>
+                <div class="file-upload-container">
+                    <label for="evidenceFiles" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        Choose Files
+                    </label>
+                    <input type="file" id="evidenceFiles" class="file-input" multiple accept="image/*,video/*">
+                </div>
+                <div class="file-preview" id="filePreview"></div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="submit-button" id="submitButton">
+            <i class="fas fa-paper-plane"></i>
+            <span>Submit Complaint</span>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const icon = themeToggle.querySelector('i');
+                if (document.body.classList.contains('dark-mode')) {
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                }
+            });
+    
+            // Show/hide other category input
+            const categorySelect = document.getElementById('category');
+            const otherCategoryInput = document.getElementById('otherCategoryInput');
+            
+            categorySelect.addEventListener('change', () => {
+                if (categorySelect.value === 'other') {
+                    otherCategoryInput.style.display = 'flex';
+                } else {
+                    otherCategoryInput.style.display = 'none';
+                }
+            });
+    
+            // File upload preview
+            const evidenceFiles = document.getElementById('evidenceFiles');
+            const filePreview = document.getElementById('filePreview');
+            let uploadedFiles = [];
+            
+            evidenceFiles.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                uploadedFiles = files;
+                
+                filePreview.innerHTML = '';
+                
+                files.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'file-preview-item';
+                        
+                        if (file.type.startsWith('image/')) {
+                            const img = document.createElement('img');
+                            img.src = event.target.result;
+                            previewItem.appendChild(img);
+                        } else if (file.type.startsWith('video/')) {
+                            const video = document.createElement('video');
+                            video.src = event.target.result;
+                            video.controls = true;
+                            previewItem.appendChild(video);
+                        }
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-file';
+                        removeBtn.innerHTML = '×';
+                        removeBtn.addEventListener('click', () => {
+                            uploadedFiles.splice(index, 1);
+                            previewItem.remove();
+                            updateFileInput();
+                        });
+                        
+                        previewItem.appendChild(removeBtn);
+                        filePreview.appendChild(previewItem);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+            
+            function updateFileInput() {
+                // This is a workaround since we can't directly modify file input files
+                // In a real app, we would handle the files in memory or use FormData
+                console.log('Updated files:', uploadedFiles);
+            }
+    
+            // Set default incident date to now
+            const now = new Date();
+            // Adjust for timezone offset
+            const timezoneOffset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - timezoneOffset)).toISOString().slice(0, -1);
+            document.getElementById('incidentDate').value = localISOTime.substring(0, 16);
+    
+            // Form submission
+            const submitButton = document.getElementById('submitButton');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+    
+            submitButton.addEventListener('click', async () => {
+                // Get form values
+                const formData = {
+                    name: document.getElementById('name').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    category: document.getElementById('category').value,
+                    otherCategory: document.getElementById('otherCategory').value.trim(),
+                    description: document.getElementById('description').value.trim(),
+                    incidentDate: document.getElementById('incidentDate').value,
+                    files: uploadedFiles
+                };
+    
+                // Validate required fields
+                if (!formData.name || !formData.phone || !formData.email || !formData.category || !formData.description) {
+                    showMessage(errorMessage, 'Please fill in all required fields');
+                    return;
+                }
+    
+                if (formData.category === 'other' && !formData.otherCategory) {
+                    showMessage(errorMessage, 'Please specify the complaint category');
+                    return;
+                }
+    
+                // Prepare final category
+                const finalCategory = formData.category === 'other' ? formData.otherCategory : formData.category;
+    
+                // Prepare data for submission
+                const submissionData = {
+                    member: {
+                        name: formData.name,
+                        phone: formData.phone,
+                        email: formData.email
+                    },
+                    complaint: {
+                        category: finalCategory,
+                        description: formData.description,
+                        incidentDate: formData.incidentDate ? new Date(formData.incidentDate) : new Date()
+                    },
+                    status: 'pending'
+                };
+    
+                // Show loading state
+                submitButton.innerHTML = '<div class="loading"></div>';
+                submitButton.disabled = true;
+    
+                try {
+                    // In a real app, we would use FormData to send files
+                    const response = await fetch('http://10.10.15.37:3000/api/complaints', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(submissionData)
+                    });
+    
+                    const data = await response.json();
+    
+                    if (response.ok) {
+                        showMessage(successMessage, 'Complaint submitted successfully!');
+                        resetForm();
+                    } else {
+                        showMessage(errorMessage, data.message || 'Error submitting complaint');
+                    }
+                } catch (error) {
+                    showMessage(errorMessage, 'Network error. Please try again.');
+                    console.error('Error:', error);
+                } finally {
+                    submitButton.innerHTML = '<i class="fas fa-paper-plane"></i><span>Submit Complaint</span>';
+                    submitButton.disabled = false;
+                }
+            });
+    
+            function showMessage(element, message) {
+                element.textContent = message;
+                element.style.display = 'block';
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 3000);
+            }
+    
+            function resetForm() {
+                document.getElementById('name').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('category').value = '';
+                document.getElementById('otherCategory').value = '';
+                document.getElementById('description').value = '';
+                document.getElementById('incidentDate').value = new Date().toISOString().substring(0, 16);
+                
+                otherCategoryInput.style.display = 'none';
+                filePreview.innerHTML = '';
+                uploadedFiles = [];
+            }
+        });
+    </script>
+</body>
+</html>

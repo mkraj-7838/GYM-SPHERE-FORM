@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Member Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a6bff;
+            --secondary: #ffffff;
+            --text: #333333;
+            --text-secondary: #666666;
+            --card-bg: #f8f9fa;
+            --picker-bg: #f1f3f5;
+            --accent: #ff6b6b;
+            --border: #e0e0e0;
+        }
+
+        body.dark-mode {
+            --primary: #5e7cff;
+            --secondary: #1e1e1e;
+            --text: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --card-bg: #2d2d2d;
+            --picker-bg: #3d3d3d;
+            --accent: #ff8e8e;
+            --border: #444444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 15px;
+            background-color: var(--secondary);
+        }
+
+        .input-icon {
+            margin-right: 10px;
+            color: var(--text-secondary);
+        }
+
+        .input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .photo-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .photo-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 150px;
+            border: 2px dashed var(--text-secondary);
+            border-radius: 50%;
+            color: var(--text-secondary);
+        }
+
+        .photo-placeholder i {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .photo-placeholder-text {
+            font-size: 14px;
+        }
+
+        .photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .picker-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0 15px;
+            background-color: var(--picker-bg);
+        }
+
+        .picker {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 14px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .trial-container {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .trial-container i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .trial-text {
+            font-size: 14px;
+            color: var(--accent);
+        }
+
+        .submit-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: var(--secondary);
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: var(--primary);
+            opacity: 0.9;
+        }
+
+        .submit-button i {
+            margin-right: 10px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--secondary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .error-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f44336;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+
+        <h1>Gym Member Registration</h1>
+
+        <div id="successMessage" class="success-message">
+            Member added successfully!
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            Error adding member. Please try again.
+        </div>
+
+        <!-- Photo Section -->
+        <div class="section-container">
+            <label class="label">Profile Photo</label>
+            <div class="photo-container" id="photoContainer">
+                <div class="photo-placeholder" id="photoPlaceholder">
+                    <i class="fas fa-camera"></i>
+                    <span class="photo-placeholder-text">Add Photo</span>
+                </div>
+                <img id="memberPhoto" class="photo" style="display: none;">
+                <input type="file" id="photoInput" accept="image/*" style="display: none;">
+            </div>
+        </div>
+
+        <!-- Personal Details Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-user-circle"></i>
+                <h2 class="section-title">Personal Details</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Full Name</label>
+                <div class="input-container">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" class="input" id="name" placeholder="Enter full name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Email</label>
+                <div class="input-container">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" class="input" id="email" placeholder="Enter email">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Phone Number</label>
+                <div class="input-container">
+                    <i class="fas fa-phone input-icon"></i>
+                    <input type="tel" class="input" id="phone" placeholder="Enter phone number">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Address</label>
+                <div class="input-container">
+                    <i class="fas fa-map-marker-alt input-icon"></i>
+                    <input type="text" class="input" id="address" placeholder="Enter address">
+                </div>
+            </div>
+        </div>
+
+        <!-- Physical Details Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-running"></i>
+                <h2 class="section-title">Physical Details</h2>
+            </div>
+            
+            <div class="row">
+                <div class="form-group">
+                    <label class="label">Height (cm)</label>
+                    <div class="input-container">
+                        <i class="fas fa-ruler-vertical input-icon"></i>
+                        <input type="number" class="input" id="height" placeholder="Enter height">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Weight (kg)</label>
+                    <div class="input-container">
+                        <i class="fas fa-weight input-icon"></i>
+                        <input type="number" class="input" id="weight" placeholder="Enter weight">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Age</label>
+                <div class="input-container">
+                    <i class="fas fa-birthday-cake input-icon"></i>
+                    <input type="number" class="input" id="age" placeholder="Enter age">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Gender</label>
+                <div class="picker-container">
+                    <i class="fas fa-venus-mars input-icon"></i>
+                    <select class="picker" id="gender">
+                        <option value="">Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Membership Details Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-id-card"></i>
+                <h2 class="section-title">Membership Details</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Training Batch</label>
+                <div class="picker-container">
+                    <i class="fas fa-clock input-icon"></i>
+                    <select class="picker" id="batch">
+                        <option value="">Select batch</option>
+                        <option value="morning">Morning Batch (6-9 AM)</option>
+                        <option value="evening">Evening Batch (5-8 PM)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Membership Plan</label>
+                <div class="picker-container">
+                    <i class="fas fa-money-bill-wave input-icon"></i>
+                    <select class="picker" id="membershipPlan">
+                        <option value="">Select plan</option>
+                        <option value="basic">Basic (₹500/month)</option>
+                        <option value="premium">Premium (₹800/month)</option>
+                        <option value="vip">VIP (₹1200/month)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Member Status</label>
+                <div class="picker-container">
+                    <i class="fas fa-user-check input-icon"></i>
+                    <select class="picker" id="status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="trial">Trial (7 days free)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscription Details -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-calendar-alt"></i>
+                <h2 class="section-title">Subscription Details</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Joining Date</label>
+                <div class="input-container">
+                    <i class="fas fa-calendar-day input-icon"></i>
+                    <input type="date" class="input" id="joiningDate">
+                </div>
+            </div>
+
+            <div class="form-group" id="subscriptionDurationContainer">
+                <label class="label">Subscription Duration</label>
+                <div class="input-container">
+                    <i class="fas fa-calendar-week input-icon"></i>
+                    <input type="number" class="input" id="monthsOfSubscription" placeholder="Number of months">
+                </div>
+            </div>
+
+            <div class="trial-container" id="trialContainer" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span class="trial-text">Trial members get 7 days free access</span>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="submit-button" id="submitButton">
+            <i class="fas fa-user-plus"></i>
+            <span>Add Member</span>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const icon = themeToggle.querySelector('i');
+                if (document.body.classList.contains('dark-mode')) {
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                }
+            });
+    
+            // Photo upload
+            const photoContainer = document.getElementById('photoContainer');
+            const photoPlaceholder = document.getElementById('photoPlaceholder');
+            const memberPhoto = document.getElementById('memberPhoto');
+            const photoInput = document.getElementById('photoInput');
+            let photoBase64 = '';
+    
+            photoContainer.addEventListener('click', () => {
+                photoInput.click();
+            });
+    
+            photoInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        photoBase64 = event.target.result;
+                        memberPhoto.src = photoBase64;
+                        memberPhoto.style.display = 'block';
+                        photoPlaceholder.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+    
+            // Status change handler
+            const statusSelect = document.getElementById('status');
+            const subscriptionContainer = document.getElementById('subscriptionDurationContainer');
+            const trialContainer = document.getElementById('trialContainer');
+    
+            statusSelect.addEventListener('change', () => {
+                if (statusSelect.value === 'trial') {
+                    subscriptionContainer.style.display = 'none';
+                    trialContainer.style.display = 'flex';
+                } else {
+                    subscriptionContainer.style.display = 'block';
+                    trialContainer.style.display = 'none';
+                }
+            });
+    
+            // Form submission
+            const submitButton = document.getElementById('submitButton');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+    
+            // Function to check for existing members
+            async function checkExistingMember(email, phone) {
+                try {
+                    const response = await fetch('http://10.10.15.37:3000/api/user/members/form-member/');
+                    if (!response.ok) throw new Error('Failed to fetch members');
+                    
+                    const data = await response.json();
+                    const members = Array.isArray(data) ? data : (data.data || data.members || []);
+
+                    return members.some(member => 
+                    (member.email && member.email.toLowerCase() === email.toLowerCase()) || 
+                    (member.phone && member.phone === phone)
+                    );
+                } catch (error) {
+                    console.error('Error checking existing members:', error);
+                    return false;
+                }
+            }
+    
+            // Modified submit handler
+            submitButton.addEventListener('click', async () => {
+                // Get form values
+                const formData = {
+                    photo: photoBase64,
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    height: document.getElementById('height').value,
+                    weight: document.getElementById('weight').value,
+                    age: document.getElementById('age').value,
+                    gender: document.getElementById('gender').value,
+                    batch: document.getElementById('batch').value,
+                    membershipPlan: document.getElementById('membershipPlan').value,
+                    status: document.getElementById('status').value,
+                    joiningDate: document.getElementById('joiningDate').value,
+                    monthsOfSubscription: statusSelect.value === 'trial' ? '' : document.getElementById('monthsOfSubscription').value
+                };
+    
+                // Simple validation
+                if (!formData.name || !formData.email || !formData.phone || !formData.gender || 
+                    !formData.batch || !formData.membershipPlan || !formData.joiningDate) {
+                    showMessage(errorMessage, 'Please fill in all required fields');
+                    return;
+                }
+    
+                if (formData.status !== 'trial' && !formData.monthsOfSubscription) {
+                    showMessage(errorMessage, 'Please enter subscription duration');
+                    return;
+                }
+    
+                // Show loading state
+                submitButton.innerHTML = '<div class="loading"></div>';
+                submitButton.disabled = true;
+    
+                try {
+                    // First check for duplicates
+                    const isDuplicate = await checkExistingMember(formData.email, formData.phone);
+                    
+                    if (isDuplicate) {
+                        showMessage(errorMessage, 'A member with this email or phone already exists!');
+                        return;
+                    }
+    
+                    // Send data to server if no duplicates
+                    const response = await fetch('http://10.10.15.37:3000/api/user/members/form-member/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+    
+                    const data = await response.json();
+    
+                    if (response.ok) {
+                        showMessage(successMessage, 'Member added successfully!');
+                        resetForm();
+                    } else {
+                        showMessage(errorMessage, data.message || 'Error adding member');
+                    }
+                } catch (error) {
+                    showMessage(errorMessage, 'Network error. Please try again.');
+                    console.error('Error:', error);
+                } finally {
+                    submitButton.innerHTML = '<i class="fas fa-user-plus"></i><span>Add Member</span>';
+                    submitButton.disabled = false;
+                }
+            });
+    
+            function showMessage(element, message) {
+                element.textContent = message;
+                element.style.display = 'block';
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 3000);
+            }
+    
+            function resetForm() {
+                document.getElementById('name').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('address').value = '';
+                document.getElementById('height').value = '';
+                document.getElementById('weight').value = '';
+                document.getElementById('age').value = '';
+                document.getElementById('gender').value = '';
+                document.getElementById('batch').value = '';
+                document.getElementById('membershipPlan').value = '';
+                document.getElementById('status').value = 'active';
+                document.getElementById('joiningDate').value = '';
+                document.getElementById('monthsOfSubscription').value = '';
+                
+                memberPhoto.style.display = 'none';
+                photoPlaceholder.style.display = 'flex';
+                photoBase64 = '';
+                
+                subscriptionContainer.style.display = 'block';
+                trialContainer.style.display = 'none';
+            }
+    
+            // Set default joining date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('joiningDate').value = today;
+        });
+    </script>
+</body>
+</html>

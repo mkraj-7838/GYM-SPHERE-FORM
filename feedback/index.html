@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Feedback Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a6bff;
+            --secondary: #ffffff;
+            --text: #333333;
+            --text-secondary: #666666;
+            --card-bg: #f8f9fa;
+            --picker-bg: #f1f3f5;
+            --accent: #ff6b6b;
+            --border: #e0e0e0;
+            --star-filled: #FFD700;
+            --star-empty: #CCCCCC;
+        }
+
+        body.dark-mode {
+            --primary: #5e7cff;
+            --secondary: #1e1e1e;
+            --text: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --card-bg: #2d2d2d;
+            --picker-bg: #3d3d3d;
+            --accent: #ff8e8e;
+            --border: #444444;
+            --star-empty: #555555;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 15px;
+            background-color: var(--secondary);
+        }
+
+        .input-icon {
+            margin-right: 10px;
+            color: var(--text-secondary);
+        }
+
+        .input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        textarea.input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .rating-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 5px;
+        }
+
+        .star {
+            color: var(--star-empty);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star.filled {
+            color: var(--star-filled);
+        }
+
+        .rating-value {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .radio-option input {
+            cursor: pointer;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .checkbox-container input {
+            cursor: pointer;
+        }
+
+        .file-upload-container {
+            margin-top: 15px;
+        }
+
+        .file-upload-label {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: var(--primary);
+            color: var(--secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .file-upload-label i {
+            margin-right: 8px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-preview {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .file-preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .file-preview-item img, .file-preview-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-file {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .submit-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: var(--secondary);
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: var(--primary);
+            opacity: 0.9;
+        }
+
+        .submit-button i {
+            margin-right: 10px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--secondary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .error-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f44336;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+
+        <h1>Gym Feedback Form</h1>
+
+        <div id="successMessage" class="success-message">
+            Feedback submitted successfully!
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            Error submitting feedback. Please try again.
+        </div>
+
+        <!-- Member Details Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-user"></i>
+                <h2 class="section-title">Your Details (Optional)</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Full Name</label>
+                <div class="input-container">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" class="input" id="name" placeholder="Enter your full name">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label class="label">Phone Number</label>
+                    <div class="input-container">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" class="input" id="phone" placeholder="Enter phone number">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Email Address</label>
+                    <div class="input-container">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" class="input" id="email" placeholder="Enter email address">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Ratings Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-star"></i>
+                <h2 class="section-title">Rate Your Experience</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Overall Gym Experience</label>
+                <div class="rating-container">
+                    <div class="rating-stars" id="overallRating">
+                        <i class="fas fa-star star" data-value="1"></i>
+                        <i class="fas fa-star star" data-value="2"></i>
+                        <i class="fas fa-star star" data-value="3"></i>
+                        <i class="fas fa-star star" data-value="4"></i>
+                        <i class="fas fa-star star" data-value="5"></i>
+                    </div>
+                    <span class="rating-value" id="overallRatingValue">0/5</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Cleanliness & Hygiene</label>
+                <div class="rating-container">
+                    <div class="rating-stars" id="cleanlinessRating">
+                        <i class="fas fa-star star" data-value="1"></i>
+                        <i class="fas fa-star star" data-value="2"></i>
+                        <i class="fas fa-star star" data-value="3"></i>
+                        <i class="fas fa-star star" data-value="4"></i>
+                        <i class="fas fa-star star" data-value="5"></i>
+                    </div>
+                    <span class="rating-value" id="cleanlinessRatingValue">0/5</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Gym Equipment Condition</label>
+                <div class="rating-container">
+                    <div class="rating-stars" id="equipmentRating">
+                        <i class="fas fa-star star" data-value="1"></i>
+                        <i class="fas fa-star star" data-value="2"></i>
+                        <i class="fas fa-star star" data-value="3"></i>
+                        <i class="fas fa-star star" data-value="4"></i>
+                        <i class="fas fa-star star" data-value="5"></i>
+                    </div>
+                    <span class="rating-value" id="equipmentRatingValue">0/5</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Trainer/Staff Behavior</label>
+                <div class="rating-container">
+                    <div class="rating-stars" id="staffRating">
+                        <i class="fas fa-star star" data-value="1"></i>
+                        <i class="fas fa-star star" data-value="2"></i>
+                        <i class="fas fa-star star" data-value="3"></i>
+                        <i class="fas fa-star star" data-value="4"></i>
+                        <i class="fas fa-star star" data-value="5"></i>
+                    </div>
+                    <span class="rating-value" id="staffRatingValue">0/5</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Availability of Equipment</label>
+                <div class="rating-container">
+                    <div class="rating-stars" id="availabilityRating">
+                        <i class="fas fa-star star" data-value="1"></i>
+                        <i class="fas fa-star star" data-value="2"></i>
+                        <i class="fas fa-star star" data-value="3"></i>
+                        <i class="fas fa-star star" data-value="4"></i>
+                        <i class="fas fa-star star" data-value="5"></i>
+                    </div>
+                    <span class="rating-value" id="availabilityRatingValue">0/5</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Ambiance & Environment</label>
+                <div class="rating-container">
+                    <div class="rating-stars" id="ambianceRating">
+                        <i class="fas fa-star star" data-value="1"></i>
+                        <i class="fas fa-star star" data-value="2"></i>
+                        <i class="fas fa-star star" data-value="3"></i>
+                        <i class="fas fa-star star" data-value="4"></i>
+                        <i class="fas fa-star star" data-value="5"></i>
+                    </div>
+                    <span class="rating-value" id="ambianceRatingValue">0/5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Feedback Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-comment-alt"></i>
+                <h2 class="section-title">Detailed Feedback</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">What do you like the most about our gym?</label>
+                <div class="input-container">
+                    <i class="fas fa-thumbs-up input-icon"></i>
+                    <textarea class="input" id="likes" placeholder="Share what you enjoy about our gym"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">What areas do you think need improvement?</label>
+                <div class="input-container">
+                    <i class="fas fa-tools input-icon"></i>
+                    <textarea class="input" id="improvements" placeholder="Suggest areas for improvement"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Any additional comments or suggestions?</label>
+                <div class="input-container">
+                    <i class="fas fa-edit input-icon"></i>
+                    <textarea class="input" id="comments" placeholder="Any other feedback you'd like to share"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendation Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-share-alt"></i>
+                <h2 class="section-title">Recommendation</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Would you recommend our gym to others?</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="recommendation" value="yes">
+                        Yes
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="recommendation" value="no">
+                        No
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="recommendation" value="maybe" checked>
+                        Maybe
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supporting Evidence Section -->
+        <div class="section-container">
+            <div class="section-header">
+                <i class="fas fa-paperclip"></i>
+                <h2 class="section-title">Supporting Evidence (Optional)</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="label">Upload Images</label>
+                <div class="file-upload-container">
+                    <label for="evidenceFiles" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        Choose Files
+                    </label>
+                    <input type="file" id="evidenceFiles" class="file-input" multiple accept="image/*">
+                </div>
+                <div class="file-preview" id="filePreview"></div>
+            </div>
+        </div>
+
+        <!-- Agreement Section -->
+        <div class="section-container">
+            <div class="checkbox-container">
+                <input type="checkbox" id="agreement" required>
+                <label for="agreement">I allow the gym to use my feedback for improvements and testimonials</label>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="submit-button" id="submitButton">
+            <i class="fas fa-paper-plane"></i>
+            <span>Submit Feedback</span>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const icon = themeToggle.querySelector('i');
+                if (document.body.classList.contains('dark-mode')) {
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                } else {
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                }
+            });
+
+            // Initialize star ratings
+            const ratingCategories = [
+                'overall', 'cleanliness', 'equipment', 'staff', 'availability', 'ambiance'
+            ];
+
+            ratingCategories.forEach(category => {
+                const stars = document.querySelectorAll(`#${category}Rating .star`);
+                const valueDisplay = document.getElementById(`${category}RatingValue`);
+
+                stars.forEach(star => {
+                    star.addEventListener('click', () => {
+                        const value = parseInt(star.getAttribute('data-value'));
+                        
+                        // Update stars
+                        stars.forEach((s, index) => {
+                            if (index < value) {
+                                s.classList.add('filled');
+                            } else {
+                                s.classList.remove('filled');
+                            }
+                        });
+                        
+                        // Update value display
+                        valueDisplay.textContent = `${value}/5`;
+                    });
+                });
+            });
+
+            // File upload preview
+            const evidenceFiles = document.getElementById('evidenceFiles');
+            const filePreview = document.getElementById('filePreview');
+            let uploadedFiles = [];
+            
+            evidenceFiles.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                uploadedFiles = files;
+                
+                filePreview.innerHTML = '';
+                
+                files.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'file-preview-item';
+                        
+                        if (file.type.startsWith('image/')) {
+                            const img = document.createElement('img');
+                            img.src = event.target.result;
+                            previewItem.appendChild(img);
+                        }
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-file';
+                        removeBtn.innerHTML = '×';
+                        removeBtn.addEventListener('click', () => {
+                            uploadedFiles.splice(index, 1);
+                            previewItem.remove();
+                            updateFileInput();
+                        });
+                        
+                        previewItem.appendChild(removeBtn);
+                        filePreview.appendChild(previewItem);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+            
+            function updateFileInput() {
+                // In a real app, we would handle the files in memory or use FormData
+                console.log('Updated files:', uploadedFiles);
+            }
+
+            // Form submission
+            const submitButton = document.getElementById('submitButton');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            submitButton.addEventListener('click', async () => {
+                // Validate agreement
+                if (!document.getElementById('agreement').checked) {
+                    showMessage(errorMessage, 'Please agree to the terms before submitting');
+                    return;
+                }
+
+                // Get form values
+                const formData = {
+                    member: {
+                        name: document.getElementById('name').value.trim(),
+                        phone: document.getElementById('phone').value.trim(),
+                        email: document.getElementById('email').value.trim()
+                    },
+                    ratings: {
+                        overall: getRatingValue('overall'),
+                        cleanliness: getRatingValue('cleanliness'),
+                        equipment: getRatingValue('equipment'),
+                        staff: getRatingValue('staff'),
+                        availability: getRatingValue('availability'),
+                        ambiance: getRatingValue('ambiance')
+                    },
+                    feedback: {
+                        likes: document.getElementById('likes').value.trim(),
+                        improvements: document.getElementById('improvements').value.trim(),
+                        comments: document.getElementById('comments').value.trim()
+                    },
+                    recommendation: document.querySelector('input[name="recommendation"]:checked').value,
+                    files: uploadedFiles,
+                    agreement: true
+                };
+
+                // Show loading state
+                submitButton.innerHTML = '<div class="loading"></div>';
+                submitButton.disabled = true;
+
+                try {
+                    // In a real app, we would use FormData to send files
+                    const response = await fetch('http://10.10.15.37:3000/api/feedback', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        showMessage(successMessage, 'Feedback submitted successfully!');
+                        resetForm();
+                    } else {
+                        showMessage(errorMessage, data.message || 'Error submitting feedback');
+                    }
+                } catch (error) {
+                    showMessage(errorMessage, 'Network error. Please try again.');
+                    console.error('Error:', error);
+                } finally {
+                    submitButton.innerHTML = '<i class="fas fa-paper-plane"></i><span>Submit Feedback</span>';
+                    submitButton.disabled = false;
+                }
+            });
+
+            function getRatingValue(category) {
+                const stars = document.querySelectorAll(`#${category}Rating .star.filled`);
+                return stars.length;
+            }
+
+            function showMessage(element, message) {
+                element.textContent = message;
+                element.style.display = 'block';
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 3000);
+            }
+
+            function resetForm() {
+                // Reset member details
+                document.getElementById('name').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('email').value = '';
+
+                // Reset ratings
+                ratingCategories.forEach(category => {
+                    const stars = document.querySelectorAll(`#${category}Rating .star`);
+                    const valueDisplay = document.getElementById(`${category}RatingValue`);
+                    
+                    stars.forEach(star => star.classList.remove('filled'));
+                    valueDisplay.textContent = '0/5';
+                });
+
+                // Reset feedback text
+                document.getElementById('likes').value = '';
+                document.getElementById('improvements').value = '';
+                document.getElementById('comments').value = '';
+
+                // Reset recommendation
+                document.querySelector('input[name="recommendation"][value="maybe"]').checked = true;
+
+                // Reset files
+                filePreview.innerHTML = '';
+                uploadedFiles = [];
+
+                // Reset agreement
+                document.getElementById('agreement').checked = false;
+            }
+        });
+    </script>
+</body>
+</html>
